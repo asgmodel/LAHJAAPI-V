@@ -39,56 +39,55 @@ namespace ApiCore.Validators
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasCategory, "Model category does not match the required value.", Value = ModelFeatureValidatorKeys.Category)]
-        private Task<ConditionResult> CheckHasCategory(DataFilter<string, ModelAi> filter)
+        private Task<ConditionResult> CheckHasCategory(DataFilter<string, ModelAi> f)
         {
-            return filter.Share?.Category == filter.Value
-                ? Task.FromResult(new ConditionResult(true, filter.Share, ""))
-                : Task.FromResult(new ConditionResult(false, null, "Category mismatch."));
+            return f.Share?.Category == f.Value
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Category mismatch.");
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasLanguage, "Model language does not match the required value.", Value = ModelFeatureValidatorKeys.Language)]
-        private Task<ConditionResult> CheckHasLanguage(DataFilter<string, ModelAi> filter)
+        private Task<ConditionResult> CheckHasLanguage(DataFilter<string, ModelAi> f)
         {
-            return filter.Share?.Language == filter.Value
-                ? Task.FromResult(new ConditionResult(true, filter.Share, ""))
-                : Task.FromResult(new ConditionResult(false, null, "Language mismatch."));
+            return f.Share?.Language == f.Value
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Language mismatch.");
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.IsStandardModel, "Model is not marked as standard.", Value = ModelFeatureValidatorKeys.IsStandard)]
-        private Task<ConditionResult> CheckIsStandard(DataFilter<bool, ModelAi> filter)
+        private Task<ConditionResult> CheckIsStandard(DataFilter<bool, ModelAi> f)
         {
-            return filter.Share?.IsStandard == filter.Value
-                ? Task.FromResult(new ConditionResult(true, filter.Share, ""))
-                : Task.FromResult(new ConditionResult(false, null, "Model is not marked as standard."));
+            return f.Share?.IsStandard == f.Value
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Model is not marked as standard.");
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasDialect, "Model dialect does not match the required value.", Value = ModelFeatureValidatorKeys.Dialect)]
-        private Task<ConditionResult> CheckHasDialect(DataFilter<string, ModelAi> filter)
+        private Task<ConditionResult> CheckHasDialect(DataFilter<string, ModelAi> f)
         {
-            return filter.Share?.Dialect == filter.Value
-                ? Task.FromResult(new ConditionResult(true, filter.Share, ""))
-                : Task.FromResult(new ConditionResult(false, null, "Dialect mismatch."));
+            return f.Share?.Dialect == f.Value
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Dialect mismatch.");
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasService, "Model service is missing")]
-        private async Task<ConditionResult> CheckHasModel(DataFilter<string, ModelAi> filter)
+        private async Task<ConditionResult> CheckHasModel(DataFilter<string, ModelAi> f)
         {
-            if (filter.Share != null)
+            if (f.Share != null)
             {
-                var res = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasModel, filter.Share.ModelGatewayId);
+                var res = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasModel, f.Share.ModelGatewayId);
 
-                if (res.Success == true)
+                if (res.Success==true)
                 {
-                    filter.Share.ModelGateway = (ModelGateway?)res.Result;
-                    return new ConditionResult(true, filter.Share, "");
+                    f.Share.ModelGateway = (ModelGateway?)res.Result;
+                    return ConditionResult.ToSuccess(f.Share);
                 }
-                else
-                {
-                    return res;
-                }
+
+                return res;
             }
 
-            return new ConditionResult(false, null, "Model AI is not found");
+            return ConditionResult.ToFailure("Model AI is not found");
         }
+
     }
 }
