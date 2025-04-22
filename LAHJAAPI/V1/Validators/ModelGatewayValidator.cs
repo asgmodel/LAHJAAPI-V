@@ -10,16 +10,13 @@ using V1.DyModels.Dso.ResponseFilters;
 
 namespace LAHJAAPI.Validators
 {
-
-
-    public  enum TypeGetWay
+    public enum TypeGetWay
     {
-
         API,
         CORE,
         WEB,
-
     }
+
     public enum ModelGatewayValidatorStates
     {
         HasId,
@@ -38,102 +35,104 @@ namespace LAHJAAPI.Validators
     {
         private ModelGateway? _gateway;
 
-        public ModelGatewayValidator(IConditionChecker checker) : base(checker)
-        {
-            
-        }
+        public ModelGatewayValidator(IConditionChecker checker) : base(checker) { }
 
         protected override void InitializeConditions()
         {
-            //RegisterSimple(ModelGatewayValidatorStates.HasId, ValidateId, "Id is required");
-            //RegisterSimple(ModelGatewayValidatorStates.HasName, ValidateName, "Name is required");
-            //RegisterSimple(ModelGatewayValidatorStates.HasValidUrl, ValidateUrl, "URL is invalid or missing");
-            //RegisterSimple(ModelGatewayValidatorStates.HasTokenIfExists, ValidateToken, "Token cannot be empty if provided");
-            //RegisterSimple(ModelGatewayValidatorStates.HasIsDefault, ValidateIsDefault, "");
-
-            RegisterCondition<string>(ModelGatewayValidatorStates.HasModel, ValidateHasModel, "Model is required");
-            RegisterCondition<object>(ModelGatewayValidatorStates.IsCore, ValidateIsCore, "Gateway must be of type 'core'");
-            RegisterCondition<object>(ModelGatewayValidatorStates.IsWeb, ValidateIsWeb, "Gateway must be of type 'web'");
-            RegisterCondition<string>(ModelGatewayValidatorStates.HasUserId, ValidateHasUserId, "UserId is required");
+            //  ”ÃÌ· «·‘—Êÿ Â‰« ›Êﬁ ﬂ· œ«·…
         }
 
         #region Validation Functions
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasId, "Id is required")]
         private Task<ConditionResult> ValidateId(DataFilter<string, ModelGateway> f)
         {
             bool valid = !string.IsNullOrWhiteSpace(f.Share?.Id);
-            return Task.FromResult(new ConditionResult(valid, f.Share, valid ? "" : "Id is required"));
+            return valid
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Id is required");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasName, "Name is required")]
         private Task<ConditionResult> ValidateName(DataFilter<string, ModelGateway> f)
         {
             bool valid = !string.IsNullOrWhiteSpace(f.Share?.Name);
-            return Task.FromResult(new ConditionResult(valid, f.Share?.Name, valid ? "" : "Name is required"));
+            return valid
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Name is required");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasValidUrl, "URL is invalid or missing")]
         private Task<ConditionResult> ValidateUrl(DataFilter<string, ModelGateway> f)
         {
             bool valid = Uri.TryCreate(f.Share?.Url, UriKind.Absolute, out _);
-            return Task.FromResult(new ConditionResult(valid, f.Share?.Url, valid ? "" : "URL is invalid or missing"));
+            return valid
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("URL is invalid or missing");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasTokenIfExists, "Token cannot be empty if provided")]
         private Task<ConditionResult> ValidateToken(DataFilter<string?, ModelGateway> f)
         {
             var token = f.Share?.Token;
             bool valid = token == null || !string.IsNullOrWhiteSpace(token);
-            return Task.FromResult(new ConditionResult(valid, token, valid ? "" : "Token cannot be empty if provided"));
+            return valid
+                ? ConditionResult.ToSuccessAsync(token)
+                : ConditionResult.ToFailureAsync("Token cannot be empty if provided");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasIsDefault, "")]
         private Task<ConditionResult> ValidateIsDefault(DataFilter<bool, ModelGateway> f)
         {
-
-
-            return Task.FromResult(new ConditionResult(true, f.Share?.IsDefault ?? false, ""));
+            return ConditionResult.ToSuccessAsync(f.Share?.IsDefault ?? false);
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasModel, "Model is required")]
         private async Task<ConditionResult> ValidateHasModel(DataFilter<string, ModelGateway> f)
         {
-
-            var getway =await GetModel(f.Id)??null;
-
-            bool isValid = getway !=null;
-            return new ConditionResult(isValid, getway, isValid ? "" : "ModelGateway  is  no found");
+            var gateway = await GetModel(f.Id) ?? null;
+            return gateway != null
+                ? ConditionResult.ToSuccess(gateway)
+                : ConditionResult.ToFailure("ModelGateway is not found");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.IsCore, "Gateway must be of type 'core'")]
         private Task<ConditionResult> ValidateIsCore(DataFilter<object, ModelGateway> f)
         {
             bool isValid = string.Equals(f.Share?.Name?.Trim(), TypeGetWay.CORE.ToString(), StringComparison.OrdinalIgnoreCase);
-            return Task.FromResult(new ConditionResult(isValid, f.Share, isValid ? "" : "Gateway must be of type 'core'"));
+            return isValid
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Gateway must be of type 'core'");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.IsWeb, "Gateway must be of type 'web'")]
         private Task<ConditionResult> ValidateIsWeb(DataFilter<object, ModelGateway> f)
         {
             bool isValid = string.Equals(f.Share?.Name?.Trim(), TypeGetWay.WEB.ToString(), StringComparison.OrdinalIgnoreCase);
-            return Task.FromResult(new ConditionResult(isValid, f.Share, isValid ? "" : "Gateway must be of type 'web'"));
+            return isValid
+                ? ConditionResult.ToSuccessAsync(f.Share)
+                : ConditionResult.ToFailureAsync("Gateway must be of type 'web'");
         }
 
+        [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasUserId, "UserId is required")]
         private Task<ConditionResult> ValidateHasUserId(DataFilter<string, ModelGateway> f)
         {
-           return Task.FromResult(new ConditionResult(true, f.Share?.IsDefault ?? false, ""));
-
-
+            return ConditionResult.ToSuccessAsync(f.Share?.IsDefault ?? false);
         }
 
         #endregion
+
         #region Helpers
-
-    
-
 
         protected override async Task<ModelGateway?> GetModel(string? id)
         {
-
             if (_gateway != null && _gateway.Id == id)
                 return _gateway;
 
             _gateway = await base.GetModel(id);
             return _gateway;
         }
+
         #endregion
     }
 }
