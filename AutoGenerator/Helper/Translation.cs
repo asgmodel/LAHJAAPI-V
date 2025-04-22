@@ -132,11 +132,22 @@ namespace AutoGenerator.Helper.Translation
 
 
         public static readonly string KEYLG = "lg";
-        public static Dictionary<string, string> ConvertTextToTranslationData(string textTranslation)
+        public static Dictionary<string, string>? ConvertTextToTranslationData(string? textTranslation)
         {
-            return string.IsNullOrEmpty(textTranslation)
-                ? new Dictionary<string, string>()
-                : JsonConvert.DeserializeObject<Dictionary<string, string>>(textTranslation);
+
+            try
+            {
+                return  JsonConvert.DeserializeObject<Dictionary<string, string>>(textTranslation);
+
+            }
+            catch
+            {
+                if (!string.IsNullOrEmpty(textTranslation))
+                    return new() { { "en", textTranslation } };
+            }
+
+            return new();
+                
         }
 
 
@@ -270,6 +281,8 @@ namespace AutoGenerator.Helper.Translation
                 }
 
                 var item = src.GetType().GetProperty(kname)?.GetValue(src) as ITranslationData;
+                if(item==null)
+                    continue;
                 var destitem = dest.GetType().GetProperty(kname);
 
 
