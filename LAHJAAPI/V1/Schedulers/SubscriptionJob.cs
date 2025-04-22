@@ -63,12 +63,12 @@ namespace ApiCore.Schedulers
                 {
 
 
-                    await _checker.Injector.Notifier.NotifyAsyn(new EmailModel()
-                    {
-                        Body = TemplateTagEmail.SubscriptionExpiringSoonTemplate(sub.User.UserName, sub.CurrentPeriodEnd),
-                        Subject = "LAHJA-API",
-                        ToEmail = sub.User.Email,
-                    });
+                    //await _checker.Injector.Notifier.NotifyAsyn(new EmailModel()
+                    //{
+                    //    Body = TemplateTagEmail.SubscriptionExpiringSoonTemplate(sub.User.UserName, sub.CurrentPeriodEnd),
+                    //    Subject = "LAHJA-API",
+                    //    ToEmail = sub.User.Email,
+                    //});
 
 
                   

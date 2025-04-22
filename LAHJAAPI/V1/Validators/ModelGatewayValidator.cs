@@ -116,7 +116,7 @@ namespace LAHJAAPI.Validators
         [RegisterConditionValidator(typeof(ModelGatewayValidatorStates), ModelGatewayValidatorStates.HasUserId, "UserId is required")]
         private Task<ConditionResult> ValidateHasUserId(DataFilter<string, ModelGateway> f)
         {
-            return ConditionResult.ToSuccessAsync(f.Share?.IsDefault ?? false);
+            return ConditionResult.ToSuccessAsync(f.Share);
         }
 
         #endregion

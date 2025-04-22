@@ -5,18 +5,18 @@
 
     public interface IBaseConditionChecker
     {
-        bool Check<TEnum>(TEnum type, object context) where TEnum : Enum;
-        Task<bool> CheckAsync<TEnum>(TEnum type, object context) where TEnum : Enum;
+        bool Check<TEnum>(TEnum type, object? context=null) where TEnum : Enum;
+        Task<bool> CheckAsync<TEnum>(TEnum type, object? context = null) where TEnum : Enum;
 
-        bool CheckAll<TEnum>(object context) where TEnum : Enum;
-        Task<bool> CheckAllAsync<TEnum>(object context) where TEnum : Enum;
+        bool CheckAll<TEnum>(object? context = null) where TEnum : Enum;
+        Task<bool> CheckAllAsync<TEnum>(object? context = null) where TEnum : Enum;
 
         bool AreAllConditionsMet<TEnum>(object context, out Dictionary<TEnum, string> failedConditions) where TEnum : Enum;
 
         void RegisterProvider<TEnum>(IConditionProvider<TEnum> provider) where TEnum : Enum;
 
-        ConditionResult CheckAndResult<TEnum>(TEnum type, object context) where TEnum : Enum;
-        Task<ConditionResult> CheckAndResultAsync<TEnum>(TEnum type, object context) where TEnum : Enum;
+        ConditionResult CheckAndResult<TEnum>(TEnum type, object? context = null) where TEnum : Enum;
+        Task<ConditionResult> CheckAndResultAsync<TEnum>(TEnum type, object? context = null) where TEnum : Enum;
 
         // دالة لفحص الشرط مع النتيجة ورسالة الخطأ
         bool CheckWithError<TEnum>(TEnum type, object context, out string errorMessage) where TEnum : Enum;
@@ -32,8 +32,8 @@
 
 
 
-        Task<bool> CheckAnyAsync<TEnum>(object context) where TEnum : Enum;
-        bool CheckAny<TEnum>(object context) where TEnum : Enum;
+        Task<bool> CheckAnyAsync<TEnum>(object? context = null) where TEnum : Enum;
+        bool CheckAny<TEnum>(object? context = null) where TEnum : Enum;
 
         void ResetConditionState<TEnum>(object context) where TEnum : Enum;
 

@@ -163,17 +163,30 @@ namespace AutoGenerator.Conditions
             {
                 if (context is T typedContext)
                 {
-                    // ÇÓÊÎÏÇã await ãÚ ÏÇáÉ ÇáÊŞííã ÅĞÇ ßÇäÊ ÛíÑ ÊÒÇãäíÉ
                     ConditionResult result = await _predicate(typedContext);
                     return result;
                 }
+                else if (context is string str)
+                {
+                    var df = new DataFilter(str);
+                  
+                    var result = await _predicate((T)(object)df);
+                    return result;
+                }
+                else if(context==null&& context is DataFilter)
 
-                // ÅĞÇ ßÇä ÇáÓíÇŞ ÛíÑ ãÊØÇÈŞ ãÚ ÇáäæÚ ÇáãÍÏÏ¡ äÑÌÚ ÑÓÇáÉ ÎØÃ
+                {
+
+                    var dfn = new DataFilter();
+                    var result = await _predicate((T)(object)dfn);
+                    return result;
+
+                }
+
                 return new ConditionResult(false, null, $"Invalid context type: {context.GetType().Name}, expected {typeof(T).Name}");
             }
             catch (Exception ex)
             {
-                // İí ÍÇáÉ ÍÏæË ÇÓÊËäÇÁ¡ äÑÌÚ ÑÓÇáÉ ÎØÃ ãÚ ÇáÊİÇÕíá
                 return new ConditionResult(false, null, $"An error occurred: {ex.Message}");
             }
         }

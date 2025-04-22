@@ -37,6 +37,7 @@ namespace AutoGenerator.Conditions
             return new DataFilter(id);
         }
 
+        
     }
 
     public class DataFilter<T> : DataFilter
@@ -182,7 +183,7 @@ namespace AutoGenerator.Conditions
             foreach (var method in methods)
             {
                 var attr = method.GetCustomAttribute<RegisterConditionValidatorAttribute>();
-               
+
 
                 var valueType = method.GetParameters().FirstOrDefault()?.ParameterType.GenericTypeArguments.FirstOrDefault();
                 if (valueType == null)
@@ -196,7 +197,7 @@ namespace AutoGenerator.Conditions
                 var genericRegisterMethod = typeof(BaseValidatorContext<,>)
                     .MakeGenericType(typeof(TContext), typeof(EValidator)) // ÇáäæÚíä ÇáÃÓÇÓííä
                     .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                    .FirstOrDefault(m => m.Name == "RegisterCondition" && m.IsGenericMethodDefinition&&m.GetParameters().Length>3);
+                    .FirstOrDefault(m => m.Name == "RegisterCondition" && m.IsGenericMethodDefinition && m.GetParameters().Length > 3);
 
                 if (genericRegisterMethod == null)
                     continue;
@@ -207,12 +208,19 @@ namespace AutoGenerator.Conditions
                     typeof(DataFilter<,>).MakeGenericType(valueType, typeof(TContext)),
                     typeof(Task<ConditionResult>)
                 );
+                try
+                {
+                    var funcDelegate = Delegate.CreateDelegate(delegateType, this, method);
 
-                var funcDelegate = Delegate.CreateDelegate(delegateType, this, method);
 
 
+                    finalMethod.Invoke(this, new object[] { (EValidator)state, funcDelegate, message, value, isCachable });
 
-                finalMethod.Invoke(this, new object[] {(EValidator) state , funcDelegate, message, value, isCachable });
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error registering condition: {method.Name} must be Share  Type TContext", ex);
+                }
             }
         }
 

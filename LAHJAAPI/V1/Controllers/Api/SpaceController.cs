@@ -6,6 +6,7 @@ using LAHJAAPI.Models;
 using LAHJAAPI.Utilities;
 using LAHJAAPI.V1.Validators;
 using LAHJAAPI.V1.Validators.Conditions;
+using LAHJAAPI.Validators;
 using Microsoft.AspNetCore.Mvc;
 using V1.DyModels.Dso.Requests;
 using V1.DyModels.VMs;
@@ -48,12 +49,13 @@ namespace V1.Controllers.Api
         public async Task<ActionResult<IEnumerable<SpaceOutputVM>>> GetAll()
         {
 
-        var  issu=   await _checker.CheckAndResultAsync(PlanValidatorStates.CustomizationDisabled,
-               
-
-
+        var  issu=   await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.IsCore,
+                ""
                 );
-            
+
+            var issu2 = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasUserId
+                   );
+
             try
             {
                 _logger.LogInformation("Fetching all Spaces...");
