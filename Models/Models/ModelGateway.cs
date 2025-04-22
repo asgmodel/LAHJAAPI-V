@@ -11,5 +11,7 @@ namespace LAHJAAPI.Models
         public string? Url { get; set; }
         public string? Token { get; set; }
         public bool IsDefault { get; set; }
+
+        
     }
 }

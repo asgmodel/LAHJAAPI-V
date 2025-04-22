@@ -19,7 +19,7 @@ namespace AutoGenerator.Conditions
         public  IDictionary<string, object>? Items { get; set; }
 
         public DataFilter() { }
-        public DataFilter(string id) { 
+        public DataFilter(string? id) { 
         
          Id = id;
         }
@@ -31,6 +31,12 @@ namespace AutoGenerator.Conditions
             Value = other.Value;
             Items = other.Items;
         }
+
+        public  static  implicit operator DataFilter(string? id)
+        {
+            return new DataFilter(id);
+        }
+
     }
 
     public class DataFilter<T> : DataFilter
