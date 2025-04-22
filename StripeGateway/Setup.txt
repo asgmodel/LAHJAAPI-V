@@ -1,0 +1,32 @@
+﻿1 => Make this library reference to project
+
+2 => Call This in program.cs
+    builder.Services.AddStripeGateway(builder.Configuration);
+    
+    Or
+    
+    builder.Services.(new StripeInfo {
+                    Name = "asg/checkout-single-subscription",
+                    Url = "https://github.com/stripe-samples/checkout-single-subscription",
+                    Version = "0.0.1",
+                },
+                builder.Configuration);
+
+
+4 => Add options to appsettings.json
+  "stripe": {
+    "info": {
+      "Name":"ASG/checkout-subscriptions",
+      "Url":"https://github.com/stripe-samples/checkout-single-subscription",
+      "Version":"0.0.1"
+    },
+    "options": {
+      "PublishableKey": "pk_test_51MegJFKMQ7LabgRTnt2OtTNJHeR4XhuFhuCwocjX3kQHpF1SccXh9V0eioRM3Vod8otrb6gK8oY4hT6pfUcxTwiE00nYsaWmru",
+      "SecretKey": "sk_test_51MegJFKMQ7LabgRTohvbmEwmIqghgKB0FoJVcu7798AjKEYQp0LilUm8iQkqiVgQYiUBiW0wUrecB6KjjX33hFtR00KrxlSM4Q",
+      "WebhookSecret": "whsec_5359bdce9ccd2bf2105aa6d966cc173a8c8f031070983155a7500e14a424528a",
+      "ProductId": "prod_QZq8epKaZqIEXq",
+      "BasicPrice": "price_1PigRrKMQ7LabgRT6EYmFYfR",
+      "ProPrice": "price_1PkApJKMQ7LabgRThhCl7ti4",
+      "ReturnUrl": "https://localhost:7003"
+    }
+  }

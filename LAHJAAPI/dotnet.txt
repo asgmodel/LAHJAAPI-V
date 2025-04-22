@@ -1,0 +1,32 @@
+
+>>dir
+>>cd projectFolder
+>> dotnet ef migrations add migrationName
+
+
+>> dotnet ef database update // create DataBase From migrition File
+
+>> dotnet ef migrations remove // remove
+
+
+dotnet ef migrations add initialcreation --project '../AutoGenerator/AutoGenerator.csproj' -c  DataContext
+
+dotnet ef migrations remove initialcreation --project '../ASG.Models' -c  DataContext
+
+//seeder data
+	dotnet run /seed 
+
+dotnet tool install --global dotnet-ef
+
+dotnet tool install --global dotnet-ef --version 6.*
+
+
+>>dotnet dev-certs https --clean
+>>dotnet dev-certs https --trust
+
+//create new solution
+	dotnet new sln -n name
+
+
+// package manager [default project => ASG.Data]
+	Add-Migration initialCreation
