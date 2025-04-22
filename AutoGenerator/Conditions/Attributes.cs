@@ -6,7 +6,7 @@ namespace AutoGenerator.Conditions;
 
    
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class RegisterConditionValidatorAttribute : Attribute
     {
         public object State { get; }

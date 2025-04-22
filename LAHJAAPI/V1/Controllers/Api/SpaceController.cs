@@ -53,8 +53,7 @@ namespace V1.Controllers.Api
                 ""
                 );
 
-            var issu2 = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasUserId
-                   );
+            var issu2 = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasUserId);
 
             try
             {

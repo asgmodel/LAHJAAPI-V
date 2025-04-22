@@ -173,7 +173,7 @@ namespace AutoGenerator.Conditions
                     var result = await _predicate((T)(object)df);
                     return result;
                 }
-                else if(context==null&& context is DataFilter)
+                else if(context==null&& typeof(T) ==typeof(DataFilter))
 
                 {
 

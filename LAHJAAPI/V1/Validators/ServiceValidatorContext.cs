@@ -138,7 +138,13 @@ namespace LAHJAAPI.Validators.v1
                 : ConditionResult.ToFailureAsync(isEmpty, "User has services");
         }
 
+
+
+        //   Ì„ﬂ‰   ”ÃÌ·    «ﬂÀ—  „‰ ‘—ÿ ·‰›” «·œ«·Â 
+
         [RegisterConditionValidator(typeof(ServiceValidatorStates), ServiceValidatorStates.IsServiceModel, "Not a valid service model", Value = ServiceType.Service)]
+        [RegisterConditionValidator(typeof(ServiceValidatorStates), ServiceValidatorStates.IsServiceDashboard, "Not a valid service model", Value = ServiceType.Dash)]
+        [RegisterConditionValidator(typeof(ServiceValidatorStates), ServiceValidatorStates.IsServiceSpace, "Not a valid service model", Value = ServiceType.Space)]
 
         private Task<ConditionResult> ValidateIsServiceType(DataFilter<string, Service> f)
         {

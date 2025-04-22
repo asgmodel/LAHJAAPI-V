@@ -174,55 +174,69 @@ namespace AutoGenerator.Conditions
             ReflectionRegisterConditionValidator();
             base.Initializer();
         }
-        protected void ReflectionRegisterConditionValidator()
+
+        private void RegisterConditionValidator(MethodInfo method, RegisterConditionValidatorAttribute attr)
+        {
+            var valueType = method.GetParameters().FirstOrDefault()?.ParameterType.GenericTypeArguments.FirstOrDefault();
+            if (valueType == null)
+                return;
+
+            var state = attr.State;
+            var message = attr.ErrorMessage;
+            var value = attr.Value;
+            var isCachable = attr.IsCachability;
+
+            var genericRegisterMethod = typeof(BaseValidatorContext<,>)
+                .MakeGenericType(typeof(TContext), typeof(EValidator))
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                .FirstOrDefault(m => m.Name == "RegisterCondition" && m.IsGenericMethodDefinition && m.GetParameters().Length > 3);
+
+            if (genericRegisterMethod == null)
+                return;
+
+            var finalMethod = genericRegisterMethod.MakeGenericMethod(valueType);
+
+            var delegateType = typeof(Func<,>).MakeGenericType(
+                typeof(DataFilter<,>).MakeGenericType(valueType, typeof(TContext)),
+                typeof(Task<ConditionResult>)
+            );
+
+            try
+            {
+                var funcDelegate = Delegate.CreateDelegate(delegateType, this, method);
+                finalMethod.Invoke(this, new object[] { (EValidator)state, funcDelegate, message, value, isCachable });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error registering condition: {method.Name} must be Share Type TContext", ex);
+            }
+        }
+
+
+         private void ReflectionRegisterConditionValidator()
         {
             var methods = GetType()
                          .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                         .Where(m => m.GetCustomAttribute<RegisterConditionValidatorAttribute>() != null);
+                         .Where(m => m.GetCustomAttributes<RegisterConditionValidatorAttribute>().Any());
 
             foreach (var method in methods)
             {
-                var attr = method.GetCustomAttribute<RegisterConditionValidatorAttribute>();
+                var attrs = method.GetCustomAttributes<RegisterConditionValidatorAttribute>().ToArray();
 
-
-                var valueType = method.GetParameters().FirstOrDefault()?.ParameterType.GenericTypeArguments.FirstOrDefault();
-                if (valueType == null)
-                    continue;
-
-                var state = attr.State;
-                var message = attr.ErrorMessage;
-                var value = attr.Value;
-                var isCachable = attr.IsCachability;
-
-                var genericRegisterMethod = typeof(BaseValidatorContext<,>)
-                    .MakeGenericType(typeof(TContext), typeof(EValidator)) // ÇáäæÚíä ÇáÃÓÇÓííä
-                    .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                    .FirstOrDefault(m => m.Name == "RegisterCondition" && m.IsGenericMethodDefinition && m.GetParameters().Length > 3);
-
-                if (genericRegisterMethod == null)
-                    continue;
-
-                var finalMethod = genericRegisterMethod.MakeGenericMethod(valueType);
-
-                var delegateType = typeof(Func<,>).MakeGenericType(
-                    typeof(DataFilter<,>).MakeGenericType(valueType, typeof(TContext)),
-                    typeof(Task<ConditionResult>)
-                );
-                try
+                if (attrs.Length == 1)
                 {
-                    var funcDelegate = Delegate.CreateDelegate(delegateType, this, method);
-
-
-
-                    finalMethod.Invoke(this, new object[] { (EValidator)state, funcDelegate, message, value, isCachable });
-
+                    RegisterConditionValidator(method, attrs[0]);
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw new Exception($"Error registering condition: {method.Name} must be Share  Type TContext", ex);
+                    foreach (var attr in attrs)
+                    {
+                        RegisterConditionValidator(method, attr);
+                    }
                 }
             }
         }
+
 
 
 
