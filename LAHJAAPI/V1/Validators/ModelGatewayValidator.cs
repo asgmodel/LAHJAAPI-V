@@ -39,7 +39,6 @@ namespace LAHJAAPI.Validators
 
         protected override void InitializeConditions()
         {
-            //  ”ÃÌ· «·‘—Êÿ Â‰« ›Êﬁ ﬂ· œ«·…
         }
 
         #region Validation Functions

@@ -96,7 +96,7 @@ public abstract class BaseJob : CJober, ITJob
 
         _options.JobGroup +=_id;
         _options.JobName += _id;
-        _options.TriggerName += _id;
+        _options.TriggerName +=_id;
 
 
 

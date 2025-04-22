@@ -30,7 +30,7 @@ namespace ApiCore.Validators
     {
         private readonly ITFactoryInjector _injector;
 
-        private Plan? _plantemp ;
+        private  Plan? _plantemp ;
 
         public PlanValidator(IConditionChecker checker) : base(checker)
         {

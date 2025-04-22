@@ -131,6 +131,7 @@ namespace LAHJAAPI.Validators.v1
         [RegisterConditionValidator(typeof(ServiceValidatorStates), ServiceValidatorStates.IsServiceIdsEmpty, "User has no services")]
         private Task<ConditionResult> ValidateServiceIdsEmpty(DataFilter<bool> f)
         {
+           
             bool isEmpty = _injector.UserClaims.ServicesIds?.Count == 0;
             return isEmpty
                 ? ConditionResult.ToSuccessAsync(isEmpty)
@@ -138,8 +139,10 @@ namespace LAHJAAPI.Validators.v1
         }
 
         [RegisterConditionValidator(typeof(ServiceValidatorStates), ServiceValidatorStates.IsServiceModel, "Not a valid service model", Value = ServiceType.Service)]
+
         private Task<ConditionResult> ValidateIsServiceType(DataFilter<string, Service> f)
         {
+
             bool valid = f.Share?.Name == f.Value;
             return valid
                 ? ConditionResult.ToSuccessAsync(f.Value)

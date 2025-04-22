@@ -36,9 +36,12 @@ namespace ApiCore.Validators
         protected override void InitializeConditions()
         {
             // All conditions now registered via attributes
+            
+
         }
 
         [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasCategory, "Model category does not match the required value.", Value = ModelFeatureValidatorKeys.Category)]
+        
         private Task<ConditionResult> CheckHasCategory(DataFilter<string, ModelAi> f)
         {
             return f.Share?.Category == f.Value
@@ -86,7 +89,7 @@ namespace ApiCore.Validators
                 return res;
             }
 
-            return ConditionResult.ToFailure("Model AI is not found");
+            return ConditionResult.ToFailure(null,"Model AI is not found");
         }
 
     }

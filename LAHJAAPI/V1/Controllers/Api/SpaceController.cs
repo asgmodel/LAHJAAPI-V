@@ -47,15 +47,13 @@ namespace V1.Controllers.Api
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<SpaceOutputVM>>> GetAll()
         {
+
         var  issu=   await _checker.CheckAndResultAsync(PlanValidatorStates.CustomizationDisabled,
-                new DataFilter
-                {
-                    Id = "price_1Qn3ypKMQ7LabgRTSuyGIBVH",
-                    Value=""
+               
 
-                }
+
                 );
-
+            
             try
             {
                 _logger.LogInformation("Fetching all Spaces...");

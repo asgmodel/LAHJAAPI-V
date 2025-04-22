@@ -231,6 +231,7 @@ public class SubscriptionValidator : BaseValidator<SubscriptionResponseFilterDso
         if (IsCancelAtPeriodEnd(context) || IsCanceled(context)) return false;
 
         return IsActive(context);
+
     }
 
     ProblemDetails? IsNotSubscribeAsync(SubscriptionResponseFilterDso context)

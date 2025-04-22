@@ -2,6 +2,7 @@ using ApiCore.Helper;
 using ApiCore.Validators;
 using AutoGenerator.Notifications;
 using AutoGenerator.Schedulers;
+using AutoNotificationService;
 using AutoNotificationService.Services.Email;
 using AutoNotificationService.Services.Sms;
 using LAHJAAPI.Models;
@@ -69,6 +70,10 @@ namespace ApiCore.Schedulers
                         ToEmail = sub.User.Email,
                     });
 
+
+                  
+
+                  
                     isons = true;
                 }
 
