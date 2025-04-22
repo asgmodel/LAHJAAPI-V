@@ -17,15 +17,14 @@ namespace ApiCore.Validators
         IsStandardModel,
         HasDialect,
         HasService,
-
     }
 
     public class ModelFeatureValidatorKeys
     {
-        public static readonly string Category = "category";
-        public static readonly string Language = "language";
-        public static readonly string IsStandard = "is_standard";
-        public static readonly string Dialect = "dialect";
+        public const string Category = "category";
+        public const  string Language = "language";
+        public const  string IsStandard = "is_standard";
+        public const  string Dialect = "dialect";
     }
 
     public class ModelAIValidator : ValidatorContext<ModelAi, ModelValidatorStates>, ITValidator
@@ -36,49 +35,10 @@ namespace ApiCore.Validators
 
         protected override void InitializeConditions()
         {
-            RegisterCondition<string>(
-                ModelValidatorStates.HasCategory,
-                CheckHasCategory,
-                "Model category does not match the required value.",
-                ModelFeatureValidatorKeys.Category
-                );
-
-            RegisterCondition<string>(
-                ModelValidatorStates.HasLanguage,
-                CheckHasLanguage,
-                "Model language does not match the required value.",
-                ModelFeatureValidatorKeys.Language
-                );
-
-            RegisterCondition<bool>(
-                ModelValidatorStates.IsStandardModel,
-                CheckIsStandard,
-                "Model is not marked as standard.",
-                ModelFeatureValidatorKeys.IsStandard
-
-
-                );
-
-            RegisterCondition<string>(
-                ModelValidatorStates.HasDialect,
-                CheckHasDialect,
-                "Model dialect does not match the required value.",
-                ModelFeatureValidatorKeys.Dialect);
-
-
-            RegisterCondition<string>(
-                ModelValidatorStates.HasService,
-                CheckHasModel,
-                "Model dialect does not match the required value."
-               );
-
-
-
-            // 
+            // All conditions now registered via attributes
         }
 
-       
-
+        [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasCategory, "Model category does not match the required value.", Value = ModelFeatureValidatorKeys.Category)]
         private Task<ConditionResult> CheckHasCategory(DataFilter<string, ModelAi> filter)
         {
             return filter.Share?.Category == filter.Value
@@ -86,6 +46,7 @@ namespace ApiCore.Validators
                 : Task.FromResult(new ConditionResult(false, null, "Category mismatch."));
         }
 
+        [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasLanguage, "Model language does not match the required value.", Value = ModelFeatureValidatorKeys.Language)]
         private Task<ConditionResult> CheckHasLanguage(DataFilter<string, ModelAi> filter)
         {
             return filter.Share?.Language == filter.Value
@@ -93,13 +54,15 @@ namespace ApiCore.Validators
                 : Task.FromResult(new ConditionResult(false, null, "Language mismatch."));
         }
 
+        [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.IsStandardModel, "Model is not marked as standard.", Value = ModelFeatureValidatorKeys.IsStandard)]
         private Task<ConditionResult> CheckIsStandard(DataFilter<bool, ModelAi> filter)
         {
             return filter.Share?.IsStandard == filter.Value
                 ? Task.FromResult(new ConditionResult(true, filter.Share, ""))
-                  : Task.FromResult(new ConditionResult(false, null, "Dialect mismatch."));
+                : Task.FromResult(new ConditionResult(false, null, "Model is not marked as standard."));
         }
 
+        [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasDialect, "Model dialect does not match the required value.", Value = ModelFeatureValidatorKeys.Dialect)]
         private Task<ConditionResult> CheckHasDialect(DataFilter<string, ModelAi> filter)
         {
             return filter.Share?.Dialect == filter.Value
@@ -107,36 +70,25 @@ namespace ApiCore.Validators
                 : Task.FromResult(new ConditionResult(false, null, "Dialect mismatch."));
         }
 
-        private  async Task<ConditionResult> CheckHasModel(DataFilter<string, ModelAi> filter)
+        [RegisterConditionValidator(typeof(ModelValidatorStates), ModelValidatorStates.HasService, "Model service is missing")]
+        private async Task<ConditionResult> CheckHasModel(DataFilter<string, ModelAi> filter)
         {
             if (filter.Share != null)
             {
-
                 var res = await _checker.CheckAndResultAsync(ModelGatewayValidatorStates.HasModel, filter.Share.ModelGatewayId);
-
 
                 if (res.Success == true)
                 {
-
                     filter.Share.ModelGateway = (ModelGateway?)res.Result;
                     return new ConditionResult(true, filter.Share, "");
                 }
                 else
+                {
                     return res;
+                }
             }
-            return   new ConditionResult(false, null, "Model Ai is no found");
 
-
-
-
+            return new ConditionResult(false, null, "Model AI is not found");
         }
-
-
-
-  
-
-
-
-
     }
 }

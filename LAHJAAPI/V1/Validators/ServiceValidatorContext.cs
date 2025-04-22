@@ -47,18 +47,8 @@ namespace LAHJAAPI.Validators.v1
 
         protected override void InitializeConditions()
         {
-            //RegisterCondition<string>(ServiceValidatorStates.HasId, ValidateId, "Id is required");
-            //RegisterCondition<string>(ServiceValidatorStates.HasName, ValidateName, "Name is required");
-            //RegisterCondition<string>(ServiceValidatorStates.HasAbsolutePath, ValidateAbsolutePath, "AbsolutePath is invalid");
-            //RegisterCondition<string>(ServiceValidatorStates.HasModelAi, ValidateModelAi, "Model AI is missing");
-            //RegisterCondition<string>(ServiceValidatorStates.HasMethods, ValidateMethods, "No methods defined for service");
-            //RegisterCondition<string>(ServiceValidatorStates.HasLinkedUsers, ValidateLinkedUsers, "Service is not linked to any user");
+           
 
-            //RegisterCondition<string>(ServiceValidatorStates.IsInUserClaims, ValidateServiceInUserClaims, "Service is not in user claims");
-            //RegisterCondition<bool>(ServiceValidatorStates.IsServiceIdsEmpty, ValidateServiceIdsEmpty, "User has no services");
-
-            //RegisterCondition<string>(ServiceValidatorStates.IsServiceModel, ValidateIsServiceType, "Not a valid service model", ServiceType.Service);
-            //RegisterCondition<string>(ServiceValidatorStates.IsServiceSpace, ValidateIsServiceType, "Not a valid space model", ServiceType.Space);
             //RegisterCondition<string>(ServiceValidatorStates.IsServiceDashboard, ValidateIsServiceType, "Not a valid dashboard model", ServiceType.Dash);
 
         }
